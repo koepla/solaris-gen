@@ -1,6 +1,6 @@
-package gen
+package main
 
-const HeaderTemplate = `
+const HeaderTemplateDefinition = `
 // Copyright (c) 2023 koepla
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,11 +30,9 @@ const HeaderTemplate = `
 // for full list of objects
 // -------------------------------------------------------------
 enum solaris_object_type {
-	{{ with .ObjectTypes }}
-		{{ range . }}
-			{{ .String() }}
-		{{ end }}
-    {{ end }}
+	{{- range .ObjectTypes.Entries }}
+	{{ .Definition }},
+	{{- end }}
 };
 
 // string representation of the specified object type
@@ -48,11 +46,9 @@ SOLARIS_API const char *solaris_object_type_to_string(enum solaris_object_type t
 // visit https://cdsarc.cds.unistra.fr/ftp/VII/118/ReadMe
 // -------------------------------------------------------------
 enum solaris_catalog_type {
-    {{ with .CatalogTypes }}
-		{{ range . }}
-			{{ .String() }}
-		{{ end }}
-    {{ end }}
+    {{- range .Catalogs.Entries }}
+	{{ .Definition }},
+	{{- end }}
 };
 
 // string representation of the specified catalog type
@@ -66,11 +62,9 @@ SOLARIS_API const char *solaris_catalog_type_to_string(enum solaris_catalog_type
 // visit https://cdsarc.cds.unistra.fr/ftp/VII/118/ReadMe
 // -------------------------------------------------------------
 enum solaris_constellation {
-	{{ with .Constellations }}
-		{{ range . }}
-			{{ .String() }}
-		{{ end }}
-    {{ end }}
+	{{- range .Constellations.Entries }}
+	{{ .Definition }},
+	{{- end }}
 };
 
 // string representation of the specified constellation
@@ -104,7 +98,7 @@ struct solaris_object {
 // ------------------------------------------------------------------
 struct solaris_object_list {
 	struct solaris_object *objects;
-	u32 size;
+	usize size;
 };
 
 // get all objects
@@ -117,7 +111,7 @@ SOLARIS_API struct solaris_object_list *solaris_objects();
 
 `
 
-const SourceTemplate = `
+const SourceTemplateDefinition = `
 // Copyright (c) 2023 koepla
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -138,11 +132,14 @@ const SourceTemplate = `
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include {{ .HeaderFileName }}
+#include "{{ .HeaderFile.Name }}"
 
 const char *solaris_object_type_to_string(enum solaris_object_type type) {
 	switch (type) {
-		%s
+		{{- range .ObjectTypes.Entries }}
+	    case {{ .Definition }}:
+	        return "{{ .Text }}";
+		{{- end }}
 		default:
 			return "unknown";
 	}
@@ -150,7 +147,10 @@ const char *solaris_object_type_to_string(enum solaris_object_type type) {
 
 const char *solaris_catalog_type_to_string(enum solaris_catalog_type type) {
 	switch (type) {
-		%s
+		{{- range .Catalogs.Entries }}
+	    case {{ .Definition }}:
+	        return "{{ .Text }}";
+		{{- end }}
 		default:
 			return "unknown";
 	}
@@ -158,19 +158,24 @@ const char *solaris_catalog_type_to_string(enum solaris_catalog_type type) {
 
 const char *solaris_constellation_to_string(enum solaris_constellation constellation) {
 	switch (constellation) {
-		%s
+		{{- range .Constellations.Entries }}
+	    case {{ .Definition }}:
+	        return "{{ .Text }}";
+		{{- end }}
 		default:
 			return "unknown";
 	}
 }
 
 static struct solaris_object generated_objects[] = {
-	%s
+	{{- range .Objects }}
+	{{ . }},
+	{{- end }}
 };
 
 static struct solaris_object_list internal_object_list = {
 	generated_objects,
-	STACK_ARRAY_SIZE(generated_objects)
+	{{ .ObjectCount }}
 };
 
 struct solaris_object_list *solaris_objects() {

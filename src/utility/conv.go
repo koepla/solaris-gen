@@ -35,12 +35,13 @@ func StringToUint64(text string) (uint64, error) {
 	}
 }
 
-// PascalCase converts a given input string to pascal case
-func PascalCase(text string) string {
+// AsEnumDefinition formats a space-separated string to an underscore-separated upper-snake-case string
+func AsEnumDefinition(text string) string {
 	if len(text) == 0 {
 		return text
 	}
-	return strings.ToUpper(text[0:1]) + strings.ToLower(text[1:])
+	parts := strings.Split(text, " ")
+	return strings.Join(Transform(parts, strings.ToUpper), "_")
 }
 
 // Transform applies the transform function `t` to all elements of `list`
