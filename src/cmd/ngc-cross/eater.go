@@ -47,7 +47,7 @@ func (eater *NgcEater) EatLine(line string) {
 		return
 	}
 
-	if object.ObjectType, err = eatObjectType(line[6:9]); err != nil {
+	if object.Classification, err = eatObjectType(line[6:9]); err != nil {
 		fmt.Println("[error] skipping line: unable to retrieve object type")
 		return
 	}
@@ -85,9 +85,9 @@ func (eater *NgcEater) EatLine(line string) {
 func eatDesignation(line string) (model.SolarisDesignation, error) {
 	designation := model.NewSolarisDesignation()
 	if line[0] == 'I' {
-		designation.Catalog = "Index Catalog"
+		designation.Catalog = "IC"
 	} else {
-		designation.Catalog = "New General Catalog"
+		designation.Catalog = "NGC"
 	}
 	var err error
 	if designation.Index, err = utility.StringToUint64(line[1:5]); err != nil {
@@ -135,7 +135,7 @@ func eatConstellation(line string) (string, error) {
 		"Ara": "Ara",
 		"Ari": "Aries",
 		"Aur": "Auriga",
-		"Boo": "Bo�tes",
+		"Boo": "Bootes",
 		"Cae": "Caelum",
 		"Cam": "Camelopardalis",
 		"Cnc": "Cancer",

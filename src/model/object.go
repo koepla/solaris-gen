@@ -70,22 +70,22 @@ func (d SolarisDesignation) String() string {
 // - dimension (angle size) [']
 // - magnitude (brightness) [1]
 type SolarisObject struct {
-	Designation   SolarisDesignation `json:"Designation"`
-	Position      SolarisEquatorial  `json:"Position"`
-	ObjectType    string             `json:"ObjectType"`
-	Constellation string             `json:"Constellation"`
-	Dimension     float64            `json:"Dimension"`
-	Magnitude     float64            `json:"Magnitude"`
+	Designation    SolarisDesignation `json:"Designation"`
+	Position       SolarisEquatorial  `json:"Position"`
+	Classification string             `json:"Classification"`
+	Constellation  string             `json:"Constellation"`
+	Dimension      float64            `json:"Dimension"`
+	Magnitude      float64            `json:"Magnitude"`
 }
 
-// ObjectTypeText retrieves the text representation of the object type
-func (o SolarisObject) ObjectTypeText() string {
-	return o.ObjectType
+// ClassificationText retrieves the text representation of the object type
+func (o SolarisObject) ClassificationText() string {
+	return o.Classification
 }
 
-// ObjectTypeDefinition retrieves the enum representation of the object type
-func (o SolarisObject) ObjectTypeDefinition() string {
-	return fmt.Sprintf("OBJECT_TYPE_%s", utility.AsEnumDefinition(o.ObjectType))
+// ClassificationDefinition retrieves the enum representation of the object type
+func (o SolarisObject) ClassificationDefinition() string {
+	return fmt.Sprintf("CLASSIFICATION_%s", utility.AsEnumDefinition(o.Classification))
 }
 
 // ConstellationText retrieves the text representation of the constellation
@@ -101,12 +101,12 @@ func (o SolarisObject) ConstellationDefinition() string {
 // NewSolarisObject creates a new SolarisObject instance
 func NewSolarisObject() SolarisObject {
 	return SolarisObject{
-		Designation:   NewSolarisDesignation(),
-		ObjectType:    "unidentified",
-		Constellation: "",
-		Position:      NewSolarisEquatorial(),
-		Dimension:     0,
-		Magnitude:     0,
+		Designation:    NewSolarisDesignation(),
+		Classification: "unidentified",
+		Constellation:  "",
+		Position:       NewSolarisEquatorial(),
+		Dimension:      0,
+		Magnitude:      0,
 	}
 }
 
@@ -114,9 +114,9 @@ func NewSolarisObject() SolarisObject {
 func (o SolarisObject) String() string {
 	return fmt.Sprintf("{ %s, %s, %s, %s, %f, %f }",
 		o.Designation.String(),
-		o.Position.String(),
-		o.ObjectTypeDefinition(),
 		o.ConstellationDefinition(),
+		o.ClassificationDefinition(),
+		o.Position.String(),
 		o.Dimension,
 		o.Magnitude,
 	)

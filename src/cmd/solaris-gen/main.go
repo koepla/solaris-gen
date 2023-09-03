@@ -45,13 +45,13 @@ func main() {
 	}
 
 	var headerFile *os.File
-	if headerFile, err = os.Create(fmt.Sprintf("%s.h", *targetFile)); err != nil {
+	if headerFile, err = os.Create(*targetFile); err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	var sourceFile *os.File
-	if sourceFile, err = os.Create(fmt.Sprintf("%s.c", *targetFile)); err != nil {
+	if sourceFile, err = os.Create(*targetFile); err != nil {
 		fmt.Println(err)
 		return
 	}

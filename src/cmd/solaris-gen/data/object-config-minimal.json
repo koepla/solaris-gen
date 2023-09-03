@@ -10,7 +10,7 @@
         "Declination": 22.1,
         "Distance": 1.0
       },
-      "ObjectType": "Supernova Remnant",
+      "Classification": "Supernova Remnant",
       "Constellation": "Taurus",
       "Dimension": 6.0,
       "Magnitude": 8.4
@@ -25,7 +25,7 @@
         "Declination": 41.6,
         "Distance": 2904.0
       },
-      "ObjectType": "Spiral Galaxy",
+      "Classification": "Spiral Galaxy",
       "Constellation": "Andromeda",
       "Dimension": 178,
       "Magnitude": 3.4

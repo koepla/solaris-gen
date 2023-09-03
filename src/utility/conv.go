@@ -35,13 +35,9 @@ func StringToUint64(text string) (uint64, error) {
 	}
 }
 
-// AsEnumDefinition formats a space-separated string to an underscore-separated upper-snake-case string
+// AsEnumDefinition uppers the text and replaces space with underscores
 func AsEnumDefinition(text string) string {
-	if len(text) == 0 {
-		return text
-	}
-	parts := strings.Split(text, " ")
-	return strings.Join(Transform(parts, strings.ToUpper), "_")
+	return strings.ReplaceAll(strings.ToUpper(text), " ", "_")
 }
 
 // Transform applies the transform function `t` to all elements of `list`
