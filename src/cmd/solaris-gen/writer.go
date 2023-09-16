@@ -9,17 +9,15 @@ import (
 
 // CodeWriter generates code
 type CodeWriter struct {
-	Objects    *[]model.SolarisObject
-	HeaderFile *os.File
-	SourceFile *os.File
+	Objects *[]model.SolarisObject
+	File    *os.File
 }
 
 // NewCodeWriter creates a SolarisWriter instance
-func NewCodeWriter(headerFile *os.File, sourceFile *os.File) *CodeWriter {
+func NewCodeWriter(file *os.File) *CodeWriter {
 	return &CodeWriter{
-		Objects:    nil,
-		HeaderFile: headerFile,
-		SourceFile: sourceFile,
+		Objects: nil,
+		File:    file,
 	}
 }
 
@@ -28,16 +26,13 @@ func (writer *CodeWriter) GenerateCode(config *model.ObjectConfig) (err error) {
 	writer.Objects = &config.Objects
 
 	var headerTemplate *template.Template
-	if headerTemplate, err = template.New(writer.HeaderFile.Name()).Parse(HeaderTemplateDefinition); err != nil {
+	if headerTemplate, err = template.New(writer.File.Name()).Parse(HeaderTemplateDefinition); err != nil {
 		return err
 	}
-
-	headerFileWriter := bufio.NewWriter(writer.HeaderFile)
-
+	headerFileWriter := bufio.NewWriter(writer.File)
 	if err = headerTemplate.Execute(headerFileWriter, writer); err != nil {
 		return err
 	}
-
 	defer func() {
 		_ = headerFileWriter.Flush()
 	}()
