@@ -256,6 +256,6 @@ func eatEquatorial(line string) (model.SolarisEquatorial, error) {
 
 	position.RightAscension = 15 * (rightAscensionHours + rightAscensionMinutes/60)
 	position.Declination = declination
-	position.Distance = 0
+	position.Distance = 1
 	return position, nil
 }
