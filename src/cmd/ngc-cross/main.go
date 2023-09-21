@@ -2,35 +2,29 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
+	"solaris-gen/utility"
 )
 
-const usage = `
-ngc-cross transpiler
-usage: %s 
-	[-v | --version] [-h | --help]
-	[--build <ngc-path> --target <config-path>]
-`
-
 func main() {
-	var buildFile *string
-	var targetFile *string
-	for index, item := range os.Args {
-		if item == "--build" && index < len(os.Args) {
-			buildFile = &os.Args[index+1]
-		} else if item == "--target" && index < len(os.Args) {
-			targetFile = &os.Args[index+1]
-		}
-	}
+	buildFileFlag := flag.String("build", "REQUIRED", "path to the ngc model file")
+	targetFileFlag := flag.String("target", "REQUIRED", "path to the generated object-config")
+	versionFlag := flag.Bool("version", false, "display the commit version")
+	flag.Parse()
 
-	// Both the build and target file must be present
-	if buildFile == nil || targetFile == nil {
-		fmt.Printf(usage, os.Args[0])
+	if *versionFlag {
+		fmt.Println("ngc-cross version: " + utility.CommitVersion())
 		return
 	}
 
-	fileHandle, err := os.Open(*buildFile)
+	if *buildFileFlag == "REQUIRED" || *targetFileFlag == "REQUIRED" {
+		flag.PrintDefaults()
+		return
+	}
+
+	fileHandle, err := os.Open(*buildFileFlag)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -54,7 +48,7 @@ func main() {
 		return
 	}
 
-	if fileHandle, err = os.Create(*targetFile); err != nil {
+	if fileHandle, err = os.Create(*targetFileFlag); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -65,5 +59,5 @@ func main() {
 		return
 	}
 
-	fmt.Printf("New config written to %s\n", *targetFile)
+	fmt.Printf("New config written to %s\n", *targetFileFlag)
 }

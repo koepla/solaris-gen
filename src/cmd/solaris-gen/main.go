@@ -4,20 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"runtime/debug"
 	"solaris-gen/model"
+	"solaris-gen/utility"
 )
-
-func commitVersion() string {
-	if info, ok := debug.ReadBuildInfo(); ok {
-		for _, settingsEntry := range info.Settings {
-			if settingsEntry.Key == "vcs.revision" {
-				return settingsEntry.Value
-			}
-		}
-	}
-	return "unknown"
-}
 
 func main() {
 	buildFileFlag := flag.String("build", "REQUIRED", "path to the object-config.json file")
@@ -26,7 +15,7 @@ func main() {
 	flag.Parse()
 
 	if *versionFlag {
-		fmt.Println("solaris-gen version: " + commitVersion())
+		fmt.Println("solaris-gen version: " + utility.CommitVersion())
 		return
 	}
 
